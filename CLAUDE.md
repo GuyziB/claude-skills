@@ -8,7 +8,7 @@ This project is a collection of custom Claude Code skills (slash commands) and c
 
 ## Skills System
 
-Skills live in `.claude/skills/`. Each `.md` file becomes a `/<filename>` slash command, invoked via the Skill tool.
+Skills live in `.claude/commands/`. Each `.md` file becomes a `/<filename>` slash command, invoked via the Skill tool.
 
 **Skill file format:**
 
