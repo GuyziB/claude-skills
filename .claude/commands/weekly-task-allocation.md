@@ -1,6 +1,6 @@
 ---
 name: weekly-task-allocation
-description: Processes a Microsoft Planner Excel or CSV export to generate a structured, prioritised HTML email for weekly team task allocation. Use this skill whenever the user uploads a Planner export file, asks to generate a weekly team email, create a task allocation summary, or process tasks for the BMS or Controls team. Trigger this skill even if the user simply says "do the weekly email" or "process the planner file" — it is very likely they mean this workflow.
+description: Processes a Microsoft Planner Excel or CSV export to generate a structured, prioritised HTML email for weekly team task allocation. Use this skill whenever the user asks to generate a weekly team email, create a task allocation summary, or process tasks for the BMS or Controls team. Trigger this skill even if the user simply says "do the weekly email" or "process the planner file" — it is very likely they mean this workflow.
 ---
 
 # Weekly Task Allocation Assistant
@@ -11,7 +11,9 @@ Turns a Microsoft Planner export into a formatted HTML team email, ready to past
 
 ## Step 1: Data Input & Cleanup
 
-Accept the uploaded Excel or CSV file. Retain only these columns:
+Read the file at `C:\Users\guyboranyay\Downloads\Weekly Plan.xlsx`. If the file is not found, tell the user to place the Planner export there and stop.
+
+Retain only these columns:
 
 - `Bucket Name`
 - `Priority`
