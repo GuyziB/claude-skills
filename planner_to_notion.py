@@ -25,7 +25,7 @@ except ImportError:
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-SOURCE_FILE  = r"C:\Users\guybaranyay\Downloads\Weekly_Plan.xlsx"
+SOURCE_FILE  = r"C:\Users\guyboranyay\Downloads\Weekly_Plan.xlsx"
 SOURCE_SHEET = "Tasks"
 OUTPUT_DIR   = Path(__file__).parent          # same folder as this script
 OUTPUT_CSV    = OUTPUT_DIR / "notion_import.csv"
