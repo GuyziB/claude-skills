@@ -10,6 +10,7 @@ ready for the Excel builder.
 
 import os
 from core.scanner import scan_file, add_manual_flag
+from core.rates import get_project_revenue
 from config.settings import PROJECTS_DIR
 
 
@@ -39,6 +40,12 @@ def run_project(project: dict) -> dict:
         display_name = file_def["label"]
         file_type    = file_def["type"]   # "EL" or "ELM"
         proj_revenue = revenues.get(filename, None)
+
+        # Auto-extract from ML_Sum if not hardcoded in settings
+        if proj_revenue is None:
+            proj_revenue = get_project_revenue(filepath)
+            if proj_revenue:
+                print(f"    [revenue] Auto-extracted from ML_Sum: €{proj_revenue:,.2f}")
 
         print(f"\n  Scanning: {filename} ({file_type})")
 
@@ -83,7 +90,7 @@ def run_project(project: dict) -> dict:
                       if scope_tots["sell"] else 0)
 
         # Hour check summary
-        bad_checks = [r for r in in_scope if r["hrs_check"] != "✓"]
+        bad_checks = [r for r in in_scope if r["hrs_check"] != "OK"]
 
         print(f"    BMS clusters found:  {len(in_scope)} in-scope, "
               f"{len(maintenance)} maintenance")
@@ -93,10 +100,10 @@ def run_project(project: dict) -> dict:
         print(f"    Gross margin:        {margin:.1f}%")
         print(f"    Labour hours:        {scope_tots['hrs']:,.1f} hrs")
         print(f"    Hour checks:         "
-              f"{'ALL ✓' if not bad_checks else str(len(bad_checks)) + ' issues'}")
+              f"{'ALL OK' if not bad_checks else str(len(bad_checks)) + ' issues'}")
         if bad_checks:
             for r in bad_checks:
-                print(f"      ⚠ {r['item_no']} {r['hrs_check']}")
+                print(f"      [WARNING] {r['item_no']} {r['hrs_check']}")
 
         file_results.append({
             "filename":      filename,

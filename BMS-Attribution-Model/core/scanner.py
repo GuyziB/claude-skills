@@ -100,7 +100,7 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
             continue   # not a BMS cluster
 
         # ── Extract grade hours — SUM all d> SUBI rows per grade ─────────────
-        grade_hrs = {"mu_A": 0.0, "mu_B": 0.0, "mu_C": 0.0}
+        grade_hrs = {"mu_A": 0.0, "mu_B": 0.0, "mu_C": 0.0, "mu_D": 0.0}
         for br in range(r + 1, nxt + 1):
             if str(df.iloc[br, 0]).strip() == "d>":
                 grade = str(df.iloc[br, 10]).strip()
@@ -113,7 +113,7 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
         # ── Labour cost calculation ───────────────────────────────────────────
         lab_cost = sum(
             grade_hrs[g] * grades[g]["cost_rate"]
-            for g in ["mu_A", "mu_B", "mu_C"]
+            for g in ["mu_A", "mu_B", "mu_C", "mu_D"]
             if g in grades
         )
         gross_profit = sell_t - mat_cost - lab_cost
@@ -121,9 +121,9 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
         # ── Hour check ────────────────────────────────────────────────────────
         grade_sum = sum(grade_hrs.values())
         if abs(grade_sum - lab_hrs) < 0.11:
-            hrs_check = "✓"
+            hrs_check = "OK"
         else:
-            hrs_check = f"⚠ sum={grade_sum:.1f} ≠ total={lab_hrs:.1f}"
+            hrs_check = f"[!] sum={grade_sum:.1f} != total={lab_hrs:.1f}"
 
         # ── Flag maintenance items ────────────────────────────────────────────
         name_lower = item_name.lower()
@@ -146,6 +146,7 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
             "mu_A_hrs":      grade_hrs["mu_A"],
             "mu_B_hrs":      grade_hrs["mu_B"],
             "mu_C_hrs":      grade_hrs["mu_C"],
+            "mu_D_hrs":      grade_hrs["mu_D"],
             "lab_cost":      lab_cost,
             "gross_profit":  gross_profit,
             "grades":        grades,
@@ -191,7 +192,7 @@ def add_manual_flag(flag_def: dict, grades: dict) -> dict:
         "lab_cost":      lab_cost,
         "gross_profit":  sell_t - mat_cost - lab_cost,
         "grades":        grades,
-        "hrs_check":     "⚠ estimated",
+        "hrs_check":     "[!] estimated",
         "is_maintenance":False,
         "is_manual_flag":True,
         "flag_reason":   flag_def.get("reason", ""),

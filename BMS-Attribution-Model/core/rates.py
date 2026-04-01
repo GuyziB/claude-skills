@@ -92,6 +92,55 @@ def get_rates(filepath: str) -> dict:
     return rates
 
 
+def get_project_revenue(filepath: str) -> float:
+    """
+    Extract the total selling revenue from ML_Sum sheet.
+
+    Method: find the 'Discy.A-J' header row, then sum each grade row below
+    it (up to 'Discy.L' / 'BOQ TOTAL') using col 4 (discounted selling) if
+    populated, otherwise col 5 (undiscounted selling) as fallback.
+
+    EL files: all grade rows have col 4 populated — sum of col 4 is used.
+    ELM files: some grade rows may only have col 5 — fallback ensures they
+    are included. This gives the correct total for both file types.
+
+    Returns 0.0 if not found.
+    """
+    try:
+        df = pd.read_excel(filepath, sheet_name="ML_Sum", header=None)
+
+        # Find the 'Discy.A-J' header row (marks start of grade section)
+        header_row = None
+        for i in range(len(df)):
+            if str(df.iloc[i, 0]).strip() == 'Discy.A-J':
+                header_row = i
+                break
+
+        if header_row is None:
+            return 0.0
+
+        total = 0.0
+        for i in range(header_row + 1, len(df)):
+            label = str(df.iloc[i, 0]).strip()
+            if label in ('Discy.L', '0.00') or str(df.iloc[i, 1]).strip() == 'BOQ TOTAL':
+                break
+            # Use col 4 (discounted selling) if available, else col 5 (undiscounted)
+            v4 = df.iloc[i, 4]
+            v5 = df.iloc[i, 5]
+            val = v4 if pd.notna(v4) and float(v4) != 0 else v5
+            if pd.notna(val):
+                try:
+                    total += float(val)
+                except (TypeError, ValueError):
+                    pass
+
+        return round(total, 2) if total > 0 else 0.0
+
+    except Exception as e:
+        print(f"  [rates] WARNING: Could not extract project revenue from {filepath}: {e}")
+    return 0.0
+
+
 def format_rate_legend(rates: dict) -> str:
     """Return a one-line rate summary string for display in Excel."""
     parts = []

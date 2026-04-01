@@ -14,9 +14,11 @@ Fields:
                         path    : filename relative to the project folder
                         type    : "EL" or "ELM"
                         label   : short display label for the output
-    project_revenue : Total project revenue from SUMM PG (EUR, excl VAT)
+    project_revenue : Total project revenue (EUR, excl VAT).
                       Used as the denominator for BMS Attribution %.
-                      Set to None to use the sum of all ISELL blocks.
+                      If omitted or set to None, auto-extracted from
+                      ML_Sum sheet (BOQ TOTAL row, col 4) — works on
+                      every EL and ELM file without a SUMM PG sheet.
     exclude_sheets  : List of sheet names to skip (optional)
     notes           : Any project-specific notes
 """
@@ -67,7 +69,9 @@ PROJECTS = [
                 "label": "E25-0465 (ELM)",
             },
         ],
-        # Revenue from SUMM PG sheets (excl VAT, excl discount where applicable)
+        # Revenue — hardcoded here as these were validated against the Projections file.
+        # For new projects leave project_revenue as {} and it will be auto-extracted
+        # from ML_Sum (BOQ TOTAL row). Hardcode only if you need to override.
         "project_revenue": {
             "E25_0477_IH_Retro_Elec_Est_Rev_A_AW.xlsx": 386990.92,
             "E25_0465_IH_Retro_Elec4Mech_Est_Rev_A_AW.xlsx": 164843.55,
@@ -95,6 +99,28 @@ PROJECTS = [
             "0465 includes Chillers/HTHP items — some overlap with separate Chillers estimate. "
             "Maintenance (€29,592) excluded from revenue scope."
         ),
+    },
+
+    {
+        "job_number":      "J01576",
+        "project_name":    "Quintano Foods",
+        "folder":          "quintano",
+        "files": [
+            {
+                "path":  "E25_0062_Quintano_Foods_Elec_ELV_As_Awarded.xlsx",
+                "type":  "EL",
+                "label": "E25-0062 (EL)",
+            },
+            {
+                "path":  "ELM25_0085_Quintano_Elec_Mech_HVAC_Est_Rev_B.xlsx",
+                "type":  "ELM",
+                "label": "E25-0085 (ELM)",
+            },
+        ],
+        # Revenue auto-extracted from ML_Sum — no need to hardcode
+        "project_revenue": {},
+        "manual_flags": {},
+        "notes": "",
     },
 
     # ── ADD NEW PROJECTS BELOW THIS LINE ──────────────────────────────────────

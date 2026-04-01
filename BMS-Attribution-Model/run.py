@@ -23,6 +23,10 @@ import sys
 import os
 from datetime import date
 
+# Force UTF-8 output on Windows (avoids cp1252 UnicodeEncodeError for €, —, etc.)
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 # Add project root to path so imports work regardless of where run.py is called from
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -98,7 +102,7 @@ def main():
         bms_pct    = total_bms / total_rev * 100 if total_rev else 0
         margin     = total_gp  / total_bms * 100 if total_bms else 0
 
-        print(f"\n  ── Summary ──────────────────────────────────")
+        print(f"\n  -- Summary ------------------------------------------")
         print(f"  BMS clusters found:  {len(all_in_scope)}")
         print(f"  Project revenue:     €{total_rev:>12,.2f}")
         print(f"  BMS revenue:         €{total_bms:>12,.2f}  ({bms_pct:.1f}%)")
