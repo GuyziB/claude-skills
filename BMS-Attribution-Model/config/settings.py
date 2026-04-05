@@ -36,7 +36,11 @@ OUTPUT_FILENAME_TEMPLATE = "BMS_Attribution_{job_number}_{project_slug}.xlsx"
 CURRENCY = "EUR"
 
 # ── BMS attribution constants ──────────────────────────────────────────────────
-BMS_ANCHOR_CODES = {"512", "617"}   # triggers BMS cluster attribution
+BMS_ANCHOR_CODES = {"512", "617"}   # triggers BMS cluster attribution (EL/ELM project files)
+BMS_ML_CODES = {                    # BMS-only standalone estimate files (ML_Sum format)
+    "410", "411", "412", "413", "414", "415",
+    "416", "417", "418", "419", "420", "421",
+}
 
 # Maintenance items — excluded from revenue denominator and subtotals
 # Items where item_name contains any of these strings AND sell_total > threshold
@@ -123,6 +127,67 @@ PROJECTS = [
         "notes": "",
     },
 
+    {
+        "job_number":      "J05226",
+        "project_name":    "KK2 General Exhaust Replacement",
+        "folder":          "J05226_ST_Micro_Exhaust_Fans",
+        "files": [
+            {
+                "path":  "E25_0559_ST_Electronics_Exhaust_Replacement_Est_.xlsx",
+                "type":  "EL",
+                "label": "E25-0559 (EL)",
+            },
+            {
+                "path":  "ELM25_0560_ST_Electronics_Exhaust_Replacement_Est_.xlsx",
+                "type":  "ELM",
+                "label": "ELM25-0560 (ELM)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "J05238",
+        "project_name":    "Sunny Cost and Lido Redevelopment",
+        "folder":          "J05238_Sunny_Coast",
+        "files": [
+            {
+                "path":  "EL25_0700_Mock_Up_Room_Elec_Estim.xlsx",
+                "type":  "EL",
+                "label": "EL25-0700 (EL)",
+            },
+            {
+                "path":  "ELM25_0699_Mock_Up_Room_Elec_for_Mech.xlsx",
+                "type":  "ELM",
+                "label": "ELM25-0699 (ELM)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    
+    {
+        "job_number":      "J01111",
+        "project_name":    "MEP Works British Hotel",
+        "folder":          "J01111_Brit_Hotel",
+        "files": [
+            {
+                "path":  "EL25_0662B_Brittania_Hotel_Elec_Revised_Estim_B.xlsx",
+                "type":  "EL",
+                "label": "EL25-0662B (EL)",
+            },
+            {
+                "path":  "ELM25_0665_Brittania_Hotel_Mech_Estimate.xlsx",
+                "type":  "ELM",
+                "label": "ELM25-0665 (ELM)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
     # ── ADD NEW PROJECTS BELOW THIS LINE ──────────────────────────────────────
     # Copy and paste the block above, update the fields, add the files to
     # projects/<folder>/ and run python run.py

@@ -7,13 +7,13 @@ Panta Contracting Limited
 Usage:
     python run.py                    # process all projects in settings.py
     python run.py J01577             # process one project by job number
+    python run.py J01578             # auto-discovers projects/J01578/ if not in settings.py
 
-What it does:
-    1. Reads project definitions from config/settings.py
-    2. Scans each estimate file for BMS clusters (ISELL/ICOST rule)
-    3. Applies manual flags defined in settings
-    4. Builds an Excel output workbook per project
-    5. Saves the output to projects/<folder>/
+Workflow for new projects:
+    1. Create projects/J01578/ (folder name = job number)
+    2. Drop estimate xlsx files into the folder
+    3. Run: python run.py J01578
+    The project is auto-detected, added to settings.py, and run immediately.
 
 Output filename format:
     BMS_Attribution_<JobNumber>_<ProjectSlug>.xlsx
@@ -32,7 +32,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config.settings import PROJECTS, OUTPUT_FILENAME_TEMPLATE, PROJECTS_DIR
 from core.attribution import run_project
+from core.discover import discover_and_register
 from outputs.excel_builder import build_workbook
+
+# Absolute path to settings.py — needed by discover_and_register
+_SETTINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               "config", "settings.py")
 
 
 def slugify(text: str) -> str:
@@ -55,6 +60,17 @@ def main():
         p for p in PROJECTS
         if filter_job is None or p["job_number"] == filter_job
     ]
+
+    # Auto-discover: if a specific job was requested but isn't in settings.py yet,
+    # scan the projects/<job_number> folder and register it automatically.
+    if not projects_to_run and filter_job:
+        try:
+            discovered = discover_and_register(filter_job, PROJECTS_DIR, _SETTINGS_PATH)
+            projects_to_run = [discovered]
+        except FileNotFoundError as e:
+            print(f"\n[ERROR] {e}")
+            print(f"Available job numbers: {[p['job_number'] for p in PROJECTS]}")
+            sys.exit(1)
 
     if not projects_to_run:
         print(f"No projects found matching: {filter_job}")

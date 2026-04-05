@@ -9,7 +9,7 @@ ready for the Excel builder.
 """
 
 import os
-from core.scanner import scan_file, add_manual_flag
+from core.scanner import scan_file, scan_tc_file, add_manual_flag
 from core.rates import get_project_revenue
 from config.settings import PROJECTS_DIR
 
@@ -42,7 +42,8 @@ def run_project(project: dict) -> dict:
         proj_revenue = revenues.get(filename, None)
 
         # Auto-extract from ML_Sum if not hardcoded in settings
-        if proj_revenue is None:
+        # BMS_TC files have no ML_Sum — revenue is taken from the scan result below
+        if proj_revenue is None and file_type != "BMS_TC":
             proj_revenue = get_project_revenue(filepath)
             if proj_revenue:
                 print(f"    [revenue] Auto-extracted from ML_Sum: €{proj_revenue:,.2f}")
@@ -53,7 +54,16 @@ def run_project(project: dict) -> dict:
             print(f"    [WARNING] File not found: {filepath}")
             continue
 
-        results, grades = scan_file(filepath, display_name)
+        if file_type == "BMS_TC":
+            results, grades = scan_tc_file(filepath, display_name)
+            # Revenue = the grand total from the file itself (whole file is BMS)
+            if proj_revenue is None and results:
+                proj_revenue = results[0]["sell_total"]
+                print(f"    [revenue] Auto-extracted from TotalCosts: €{proj_revenue:,.2f}")
+        elif file_type == "BMS_ML":
+            results, grades = scan_file(filepath, display_name, force_bms=True)
+        else:
+            results, grades = scan_file(filepath, display_name)
 
         # Inject manual flags for this file
         for excel_row, flag_def in manual_flags.items():

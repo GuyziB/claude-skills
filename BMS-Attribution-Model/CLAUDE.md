@@ -12,8 +12,23 @@ python run.py J01576       # one specific project by job number
 
 ## Attribution rule — never change this
 - Scan Elec_Est sheet for ISELL/ICOST blocks
-- If ANY line item in the block has C_CODE 512 or 617 → entire block is BMS
+- If ANY line item in the block has C_CODE 512 or 617 → entire block is BMS (EL/ELM)
 - DO NOT add code 570 as a BMS anchor — it overcounts
+
+## Standalone BMS estimate file types
+Two additional file types for standalone BMS team jobs (not integrated into bigger projects):
+
+**BMS_ML** — has ML_Sum + Elec_Est, uses BMS cost codes 410–421.
+  If ANY code 410–421 appears in the file → entire file is 100% BMS.
+  All ISELL/ICOST clusters included regardless of per-cluster codes.
+  Revenue extracted from ML_Sum as normal.
+
+**BMS_TC** — has TotalCosts (Hrs) sheet (panel/small-job estimator format).
+  No ISELL/ICOST structure. Single summary row 'TOTAL (Excl. VAT)'.
+  Revenue = col 43 (TOTAL with mark-up). Material = col 29. Hours = cols 34+35+36.
+  Entire file is 100% BMS by definition. Labour cost uses DEFAULT_RATES.
+
+File type is auto-detected by discover.py from sheet names — no manual setting needed.
 - All hours within a BMS cluster are BMS team hours regardless of grade
 - Item Number = col D on ISELL row, Item Name = col D one row below
 - Sell Total = col F (index 5) on ISELL row
@@ -50,11 +65,20 @@ col 4 (discounted selling) if populated, else col 5 as fallback → stop at Disc
 Works for both EL (single/multi-grade with col 4 always populated) and ELM
 (some grades only have col 5). SUMM PG sheet is NOT needed.
 
+## Adding a new project — zero-config workflow
+1. Create projects/J05226_ST_Micro_Exhaust_Fans/  (J0XXXX_ prefix + human-readable name)
+2. Drop estimate xlsx files into it (ELM* files auto-detected as ELM type, E* as EL)
+3. Run: python run.py J05226   (job number only — discovers the folder by prefix)
+   — Project name auto-read from ML_Sum sheet
+   — Entry written to config/settings.py automatically (stores full folder name)
+   — Attribution runs immediately
+
 ## Project file locations
-config/settings.py        — add new projects here
+config/settings.py        — project registry (auto-updated by discover workflow)
 core/scanner.py           — ISELL/ICOST cluster scan engine
-core/rates.py             — labour rate extraction
+core/rates.py             — labour rate extraction + revenue auto-extraction
 core/attribution.py       — orchestrates scanning per project
+core/discover.py          — auto-discovery: scans new folders, registers in settings.py
 outputs/excel_builder.py  — builds Excel output
 projects/quintano/        — Quintano estimate files live here
 projects/intercontinental/— Intercontinental estimate files

@@ -32,9 +32,13 @@ from config.settings import BMS_ANCHOR_CODES, MAINTENANCE_KEYWORDS, MAINTENANCE_
 from core.rates import get_rates
 
 
-def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tuple:
+def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est",
+              force_bms: bool = False) -> tuple:
     """
     Scan an estimate file for BMS clusters.
+
+    force_bms=True: every ISELL/ICOST cluster is attributed as BMS regardless
+    of cost codes. Used for BMS_ML files where the entire file is BMS by definition.
 
     Returns:
         results (list of dicts) — one entry per BMS cluster found
@@ -97,7 +101,10 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
 
         triggers = sorted(set(c for c in codes if c in BMS_ANCHOR_CODES))
         if not triggers:
-            continue   # not a BMS cluster
+            if not force_bms:
+                continue   # not a BMS cluster
+            # force_bms: include this cluster, label trigger with any codes found
+            triggers = sorted(set(codes)) or ["BMS"]
 
         # ── Extract grade hours — SUM all d> SUBI rows per grade ─────────────
         grade_hrs = {"mu_A": 0.0, "mu_B": 0.0, "mu_C": 0.0, "mu_D": 0.0}
@@ -156,6 +163,105 @@ def scan_file(filepath: str, display_name: str, sheet: str = "Elec_Est") -> tupl
         })
 
     return results, grades
+
+
+def scan_tc_file(filepath: str, display_name: str) -> tuple:
+    """
+    Scan a standalone BMS estimate in TotalCosts (Hrs) format.
+
+    These files have no ML_Sum or ISELL/ICOST structure — the entire file is
+    one BMS item. Reads the 'TOTAL (Excl. VAT)' summary row and returns a
+    single cluster dict representing the whole file.
+
+    Column index reference (TotalCosts sheet, 0-based):
+        3  = Description
+        4  = Material cost (excl. VAT)
+        29 = Material sell total (excl. VAT, pre-markup check)
+        31 = Material sell total (with mark-up)
+        34 = Tradesman pair hours
+        35 = Technician pair hours
+        36 = Engineer man hours
+        38 = Labour selling price (Tradesman/Technician)
+        39 = Engineer selling price
+        43 = TOTAL with mark-up (grand revenue figure)
+    """
+    from config.settings import DEFAULT_RATES
+
+    grades = {g: {**v, "sell_rate": 0.0, "source": "default"}
+              for g, v in DEFAULT_RATES.items()}
+
+    try:
+        df = pd.read_excel(filepath, sheet_name="TotalCosts (Hrs)", header=None)
+    except Exception as e:
+        print(f"  [scanner] ERROR reading TotalCosts (Hrs) from {filepath}: {e}")
+        return [], grades
+
+    # Find the TOTAL summary row
+    total_row = None
+    for i in range(len(df)):
+        if str(df.iloc[i, 3]).strip() == "TOTAL (Excl. VAT)":
+            total_row = i
+            break
+
+    if total_row is None:
+        print(f"  [scanner] WARNING: 'TOTAL (Excl. VAT)' row not found in {filepath}")
+        return [], grades
+
+    def safe_float(val):
+        try:
+            v = float(val)
+            return v if v == v else 0.0  # nan check
+        except (TypeError, ValueError):
+            return 0.0
+
+    row = df.iloc[total_row]
+    mat_cost   = safe_float(row[4])
+    sell_total = safe_float(row[43])
+    trad_hrs   = safe_float(row[34])
+    tech_hrs   = safe_float(row[35])
+    eng_hrs    = safe_float(row[36])
+    lab_hrs    = trad_hrs + tech_hrs + eng_hrs
+
+    # Labour cost using DEFAULT_RATES (no rate sheet in these files)
+    lab_cost = (
+        trad_hrs * grades.get("mu_A", {}).get("cost_rate", 27.46) +
+        tech_hrs * grades.get("mu_B", {}).get("cost_rate", 33.72) +
+        eng_hrs  * grades.get("mu_C", {}).get("cost_rate", 30.00)
+    )
+    gross_profit = sell_total - mat_cost - lab_cost
+
+    # Project name from row 1 col 3
+    try:
+        item_name = str(df.iloc[1, 3]).strip()
+        if item_name in ("nan", ""):
+            item_name = display_name
+    except (IndexError, AttributeError):
+        item_name = display_name
+
+    result = {
+        "display_name":  display_name,
+        "filepath":      filepath,
+        "sheet":         "TotalCosts (Hrs)",
+        "excel_row":     total_row + 1,
+        "item_no":       "TOTAL",
+        "item_name":     item_name[:80],
+        "trigger":       "BMS (standalone)",
+        "sell_total":    sell_total,
+        "mat_cost":      mat_cost,
+        "lab_hrs_total": lab_hrs,
+        "mu_A_hrs":      trad_hrs,
+        "mu_B_hrs":      tech_hrs,
+        "mu_C_hrs":      eng_hrs,
+        "mu_D_hrs":      0.0,
+        "lab_cost":      lab_cost,
+        "gross_profit":  gross_profit,
+        "grades":        grades,
+        "hrs_check":     "OK",
+        "is_maintenance":False,
+        "is_manual_flag":False,
+    }
+
+    return [result], grades
 
 
 def add_manual_flag(flag_def: dict, grades: dict) -> dict:
