@@ -6,7 +6,9 @@
       "Bash(python -c \"import sys; [print\\(l.rstrip\\(\\)\\) for l in sys.stdin]\")",
       "Bash(python run.py J01577)",
       "Read(//c/users/guyboranyay/OneDrive/Documents/Visual Code Studio/Claude/.git/rebase-merge//**)",
-      "Read(//c/users/guyboranyay/OneDrive/Documents/Visual Code Studio/Claude/.git/rebase-merge/**)"
+      "Read(//c/users/guyboranyay/OneDrive/Documents/Visual Code Studio/Claude/.git/rebase-merge/**)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)"
     ]
   }
 }
