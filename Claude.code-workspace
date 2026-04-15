@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "BMS-Attribution-Model"
+		},
+		{
+			"path": "MCP Server"
 		}
 	]
 }
