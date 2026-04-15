@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config.settings import PROJECTS, OUTPUT_FILENAME_TEMPLATE, PROJECTS_DIR
 from core.attribution import run_project
-from core.discover import discover_and_register
+from core.discover import discover_and_register, discover_all_folders
 from outputs.excel_builder import build_workbook
 
 # Absolute path to settings.py — needed by discover_and_register
@@ -60,6 +60,13 @@ def main():
         p for p in PROJECTS
         if filter_job is None or p["job_number"] == filter_job
     ]
+
+    # Bulk-discover: when no job number is given, scan projects/ for any folders
+    # not yet registered and add them to settings.py before running.
+    if filter_job is None:
+        registered_folders = {p["folder"] for p in PROJECTS}
+        new_projects = discover_all_folders(registered_folders, PROJECTS_DIR, _SETTINGS_PATH)
+        projects_to_run = projects_to_run + new_projects
 
     # Auto-discover: if a specific job was requested but isn't in settings.py yet,
     # scan the projects/<job_number> folder and register it automatically.

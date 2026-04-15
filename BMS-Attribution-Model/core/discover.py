@@ -238,3 +238,54 @@ def discover_and_register(job_number: str, projects_dir: str, settings_path: str
 
     print(f"  [discover] Done — {job_number} added to settings.py")
     return project
+
+
+def discover_all_folders(registered_folders: set, projects_dir: str,
+                         settings_path: str) -> list:
+    """
+    Scan every subfolder in projects_dir and register any that are not already
+    in settings.py. Returns a list of newly discovered project dicts.
+
+    Called by run.py when no job number argument is given, so that
+    `python run.py` always processes every folder in projects/.
+
+    Folders are identified by their directory name. If the folder name starts
+    with a J0XXXX_ prefix that job number is used; otherwise the folder name
+    itself is used as the job_number label.
+    """
+    import re
+    new_projects = []
+
+    all_folders = sorted(
+        d for d in os.listdir(projects_dir)
+        if os.path.isdir(os.path.join(projects_dir, d))
+    )
+
+    for folder_name in all_folders:
+        if folder_name in registered_folders:
+            continue  # already registered
+
+        folder_path = os.path.join(projects_dir, folder_name)
+
+        # Check there are xlsx files to process
+        xlsx = [f for f in os.listdir(folder_path)
+                if f.lower().endswith(".xlsx") and not f.startswith("BMS_Attribution_")]
+        if not xlsx:
+            continue
+
+        # Derive job_number: use J0XXXX prefix if present, else folder name
+        m = re.match(r'^(J\d+)_', folder_name)
+        job_number = m.group(1) if m else folder_name
+
+        print(f"\n  [discover] Unregistered folder: {folder_name}")
+        try:
+            project = scan_project_folder(job_number, folder_path)
+            print(f"  [discover] Project name: {project['project_name']}")
+            print(f"  [discover] Files: " + ", ".join(f['label'] for f in project['files']))
+            append_to_settings(project, settings_path)
+            print(f"  [discover] Registered as {job_number}")
+            new_projects.append(project)
+        except Exception as e:
+            print(f"  [discover] WARNING: Could not register {folder_name}: {e}")
+
+    return new_projects

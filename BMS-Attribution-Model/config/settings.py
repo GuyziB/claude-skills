@@ -128,9 +128,239 @@ PROJECTS = [
     },
 
     {
-        "job_number":      "J05226",
+        "job_number":      "BMIT",
+        "project_name":    "BMIT Project",
+        "folder":          "BMIT",
+        "files": [
+            {
+                "path":  "C26_BMIT_ELM_P286.2_R0.1.xlsx",
+                "type":  "BMS_ML",
+                "label": "C26-BMIT (BMS_ML)",
+            },
+            {
+                "path":  "C26_BMIT_KNX_P286.1_R0.1.xlsx",
+                "type":  "BMS_ML",
+                "label": "C26-BMIT (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "CortisZebbug",
+        "project_name":    "CortisZebbug",
+        "folder":          "CortisZebbug",
+        "files": [
+            {
+                "path":  "Cortis Lidl Zebbug_ (SJ SJ554 - R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "Cortis Lidl Zebbug- (SJ SJ554 - R0.1).xlsx (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "CraneCurrencyVSD",
+        "project_name":    "CraneCurrencyVSD",
+        "folder":          "CraneCurrencyVSD",
+        "files": [
+            {
+                "path":  "Crane Currency - VSD for AHU-09 (SJ572 R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "Crane Curren (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "DomenCarparkPanels",
+        "project_name":    "DomenCarparkPanels",
+        "folder":          "DomenCarparkPanels",
+        "files": [
+            {
+                "path":  "Dolmen Carpark Panels(SJ574 R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "Dolmen Carpa (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "Getec_Inverter_MDP",
+        "project_name":    "Malta Diary",
+        "folder":          "Getec_Inverter_MDP",
+        "files": [
+            {
+                "path":  "C26_Getec_Inverter_Panel_SJ586_R0.1_.xlsx",
+                "type":  "BMS_ML",
+                "label": "C26-Getec (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "LewisPressAHU02",
+        "project_name":    "LewisPressAHU02",
+        "folder":          "LewisPressAHU02",
+        "files": [
+            {
+                "path":  "Lewis Press (SJ549.1 R1.0).xlsx",
+                "type":  "BMS_TC",
+                "label": "Lewis Press  (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "Nexent",
+        "project_name":    "Multi Tenant Area",
+        "folder":          "Nexent",
+        "files": [
+            {
+                "path":  "Nexent_B3L2_SJ583_R0.1.xlsx",
+                "type":  "BMS_ML",
+                "label": "Nexent-B3L2 (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "NinjaParlour",
+        "project_name":    "Ninja Parlour",
+        "folder":          "NinjaParlour",
+        "files": [
+            {
+                "path":  "C26_Trident_Ninja_SJ578_R0.3.xlsx",
+                "type":  "BMS_ML",
+                "label": "C26-Trident (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "PantaHubShowroom_Phase2",
+        "project_name":    "Panta Showroom Phase 2",
+        "folder":          "PantaHubShowroom_Phase2",
+        "files": [
+            {
+                "path":  "PantaShowroom_Phase2.xlsx",
+                "type":  "EL",
+                "label": "PantaShowroom-Phase2.xlsx (EL)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "PortomasoFCUControllers",
+        "project_name":    "PortomasoFCUControllers",
+        "folder":          "PortomasoFCUControllers",
+        "files": [
+            {
+                "path":  "Portomaso FCU Controllers (SJ573 R0.2).xlsx",
+                "type":  "BMS_TC",
+                "label": "Portomaso FC (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "PortomasoSI03_EnergyMeters",
+        "project_name":    "Portomaso Phase 3",
+        "folder":          "PortomasoSI03_EnergyMeters",
+        "files": [
+            {
+                "path":  "SJ565_Portomaso_SI3_Heat_Meters.xlsx",
+                "type":  "BMS_ML",
+                "label": "SJ565-Portomaso (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "PortomasoSI04_EnergyMeters",
+        "project_name":    "Portomaso Phase 4",
+        "folder":          "PortomasoSI04_EnergyMeters",
+        "files": [
+            {
+                "path":  "SJ562_Portomaso_SI4_Heat_Meters.xlsx",
+                "type":  "BMS_ML",
+                "label": "SJ562-Portomaso (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "Portomaso_L4_Dampers",
+        "project_name":    "Portomaso L4 Dampers",
+        "folder":          "Portomaso_L4_Dampers",
+        "files": [
+            {
+                "path":  "C26_Portomaso_L4_Dampers_SJ585.1_R0.1.xlsx",
+                "type":  "BMS_ML",
+                "label": "C26-Portomaso (BMS_ML)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "STMicroExtractFans",
+        "project_name":    "STMicroExtractFans",
+        "folder":          "STMicroExtractFans",
+        "files": [
+            {
+                "path":  "ST MicroElectronics KK2 (SJ564 R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "ST MicroElec (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "STPropertiesPumpInverter",
+        "project_name":    "STPropertiesPumpInverter",
+        "folder":          "STPropertiesPumpInverter",
+        "files": [
+            {
+                "path":  "ST Properties Borehole Pump Inverter Replacement(SJ577 R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "ST Propertie (BMS_TC)",
+            },
+        ],
+        "project_revenue": {},
+        "manual_flags":    {},
+        "notes":           "",
+    },
+    {
+        "job_number":      "ST_Micro_Exhaust_Fans",
         "project_name":    "KK2 General Exhaust Replacement",
-        "folder":          "J05226_ST_Micro_Exhaust_Fans",
+        "folder":          "ST_Micro_Exhaust_Fans",
         "files": [
             {
                 "path":  "E25_0559_ST_Electronics_Exhaust_Replacement_Est_.xlsx",
@@ -148,9 +378,9 @@ PROJECTS = [
         "notes":           "",
     },
     {
-        "job_number":      "J05238",
+        "job_number":      "Sunny_Coast",
         "project_name":    "Sunny Cost and Lido Redevelopment",
-        "folder":          "J05238_Sunny_Coast",
+        "folder":          "Sunny_Coast",
         "files": [
             {
                 "path":  "EL25_0700_Mock_Up_Room_Elec_Estim.xlsx",
@@ -167,21 +397,15 @@ PROJECTS = [
         "manual_flags":    {},
         "notes":           "",
     },
-    
     {
-        "job_number":      "J01111",
-        "project_name":    "MEP Works British Hotel",
-        "folder":          "J01111_Brit_Hotel",
+        "job_number":      "TridentParkChillerCabling",
+        "project_name":    "TridentParkChillerCabling",
+        "folder":          "TridentParkChillerCabling",
         "files": [
             {
-                "path":  "EL25_0662B_Brittania_Hotel_Elec_Revised_Estim_B.xlsx",
-                "type":  "EL",
-                "label": "EL25-0662B (EL)",
-            },
-            {
-                "path":  "ELM25_0665_Brittania_Hotel_Mech_Estimate.xlsx",
-                "type":  "ELM",
-                "label": "ELM25-0665 (ELM)",
+                "path":  "Trident Park Chiller Cabling (SJ62.1 R0.1).xlsx",
+                "type":  "BMS_TC",
+                "label": "Trident Park (BMS_TC)",
             },
         ],
         "project_revenue": {},
